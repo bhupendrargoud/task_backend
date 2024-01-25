@@ -10,7 +10,7 @@ package com.gavika.payroll.controller;
 
 	    @GetMapping("/")
 	    public String welcome() {
-	        return "Hello from the backend of the Payroll application @gavika from jenkins";
+	        return "Hello from the backend of the Payroll application @gavika";
 	    }
 	}
 
