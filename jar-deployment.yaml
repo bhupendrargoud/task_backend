@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
       - name: backend-container
-        image: backend-app
-        imagePullPolicy: IfNotPresent
+        image: bhupendrargoud/payroll_app:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:
