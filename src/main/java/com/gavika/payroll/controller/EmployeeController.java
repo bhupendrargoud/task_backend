@@ -89,7 +89,8 @@ public class EmployeeController {
 	    @DeleteMapping("/delete/{Id}")
 	    public ResponseEntity<Void> deleteEmployee(@PathVariable int Id) {
 	    	
-	        if (employeeRepository.existsById(Id)) {
+	        if (employeeRepository.existsById(Id) && Id!=1) {
+	        	
 	            employeeRepository.deleteById(Id);
 	            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	        } else {
