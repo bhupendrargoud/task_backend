@@ -98,53 +98,54 @@ Click on `Add Maven` and provide a name (`Maven`) and set the MAVEN_HOME let Jen
 
 
 
-
 ## integrating kubernetes
 ```bash
 minikube start --driver=docker
 kubectl config view
 #Note the server IP
 ```
+Install  Kubernetes CLI Plugins:
+In Jenkins, go to `Manage Jenkins` -> `Manage Plugins` -> `Available` tab.
+
+Configure Kubernetes Cluster:
+Configure kubectl with the credentials for your Kubernetes cluster on the Jenkins server. This usually involves copying the Kubernetes configuration file (kubeconfig) to the appropriate location. The kubeconfig file typically resides in `~/.kube/config `by default.
 ```bash
-#check tha availibility of certificate 
-cat 
-cd ~/.minikube/certs/
-ls
-#There should be a file with name "apiserver.crt" 
+# Copy the kubeconfig file from your local machine to the Jenkins server
+scp ~/.kube/config /var/lib/jenkins/.kube/config
+
 ```
-### if file is not present  => follow the below steps
+
+Create Kubernetes Service Account:
+To interact with the Kubernetes cluster from Jenkins, it's a good practice to create a Kubernetes service account. This account should have appropriate RBAC (Role-Based Access Control) permissions for the tasks Jenkins will perform.
+
+### Create a Kubernetes Credential in Jenkins:
+
+Open Jenkins and navigate to `Manage Jenkins` > `Manage Credentials.`
+Click on `(global)` domain or the domain relevant to your setup.
+Click on `Add Credentials.`
+Choose `Secret text` as the kind and enter the contents of the kubeconfig file 
+provide a unique ID `minikube` and description `minikube_jenkins`for the credential.
+Click `OK` to save the credential.
+## Create a New Jenkins Job:
+
+From the Jenkins dashboard, click on `New Item` to create a new Jenkins job.  
+Choose `Pipeline` as the job type.
+Ener the name `Backend_pipeline`
+Configure Pipeline from SCM (Source Code Management):
+In the job configuration, find the `Pipeline` section.
+Choose `Pipeline script from SCM` as the Definition.
+Select `Git` as the SCM.
+Enter the URL 
 ```bash
-#login to minikube
-minikube ssh
-#copy the file content of apiserver.crt
-cat /var/lib/minikube/certs/apiserver.crt
+https://github.com/gavika/reference-app-payroll-backend.git
 ```
-```bash
-#Create new file in "~/.minikube/certs/" and paste content
-sudo vi apiserver.crt
-```
-### On jenkins server
-#### Step 1: Install the Kubernetes CLI Plugin
-Log in to your Jenkins instance.
-Navigate to `Manage Jenkins" > "Manage Plugins.`
-Go to the `Available` tab and search for `Kubernetes CLI.`
+specify credentials `git_jenkins`
 
-Check the box next to "Kubernetes CLI" and click "Install without restart."
+#### Enable Poll SCM:
 
-#### Step 2: Configure Kubernetes credentials
-Navigate:
- to `Manage Jenkins` > `Manage Credentials.`
-Add Credential:
+In the job configuration page, find the `Build Triggers` section.
+Check the box next to `Poll SCM.`
+In the `Schedule` field, enter `* * * * *`  
+Save your Jenkins job configuration.  
 
-Under `(global),` click `(Add Credentials).`
-Credential Type:
-Kind: `Secret file.`
-Scope: Global.
-Upload File:
-Choose the secret file under File.
-`~/.minikube/certs/apiserver.crt`
-
-Set ID: `minikube`
-Optional Description:`minikube`
-Click `OK` or `Apply` to save.
-
+Run the Jenkins job manually for the first time to verify that the pipeline is correctly configured.
