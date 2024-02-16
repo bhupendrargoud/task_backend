@@ -123,9 +123,13 @@ To interact with the Kubernetes cluster from Jenkins, it's a good practice to cr
 Open Jenkins and navigate to `Manage Jenkins` > `Manage Credentials.`
 Click on `(global)` domain or the domain relevant to your setup.
 Click on `Add Credentials.`
-Choose `Secret text` as the kind and enter the contents of the kubeconfig file 
+Choose `X.509 Client Certificate` as the kind and enter the contents 
+copy the data of `/.minikube/profiles/minikube/apiserver.key `> `Client key`
+copy the data of `/.minikube/profiles/minikube/apiserver.crt `> `Client Certificate`
+copy the data of `/.minikube/ca.crt `> `Server CA Certificate`
 provide a unique ID `minikube` and description `minikube_jenkins`for the credential.
 Click `OK` to save the credential.
+
 ## Create a New Jenkins Job:
 
 From the Jenkins dashboard, click on `New Item` to create a new Jenkins job.  
